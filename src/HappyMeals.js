@@ -9,7 +9,7 @@ class HappyMeals {
   }
 
   get provideMeals() {
-    return 'Yo'
+    return 'Yo4'
   }
 
   incrementTotals(weekMap,nameDay,mealKey){
