@@ -9,21 +9,21 @@ class HappyMeals {
   }
 
   get provideMeals() {
-    return 'Yo4'
+    return 'Yo'
   }
 
   incrementTotals(weekMap,nameDay,mealKey){
     let newTotal = weekMap[nameDay]['totals']
     let meal = this.uptake[nameDay][mealKey]
+    console.log('---')
     for (let i = 0; i < meal.length; i++) {
-      let oldTotal = newTotal[meal[i]['portion']]
-      console.log(meal[i]['name'],meal[i]['portion'])
-      console.log(oldTotal)
-      if(oldTotal === undefined){
-        console.log('kaput')
+      console.log(nameDay, mealKey, meal[i])
+      if(!newTotal[meal[i]['name']]){
+        console.log('c vide')
         newTotal[meal[i]['name']] = meal[i]['portion']
       }else{
-        newTotal[meal[i]['name']] = meal[i]['portion']
+        console.log('ya un truc : ', newTotal[meal[i]['name']])
+        newTotal[meal[i]['name']] = meal[i]['portion'] + newTotal[meal[i]['name']]
       }
     }
     return newTotal
@@ -43,7 +43,7 @@ class HappyMeals {
     for (let i = 0; i < 7; i++) {
       let nameDay = this.nameDays[i]
       weekMap[nameDay] = {
-        totals: {},
+        totals: [],
         proposals: {},
         pattern: this.pattern
       }
@@ -60,6 +60,7 @@ class HappyMeals {
     console.log('uptake', this.uptake)
     console.log('weekMap()', this.weekMap())
     console.log('provideMeals', this.provideMeals)
+    console.log(this.weekMap()['monday']['totals'])
   }
 
 }

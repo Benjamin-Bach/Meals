@@ -83,11 +83,16 @@ let recommendations = [
 let weekUptake = {
   monday: {
     0: [
+      {name: 'Fruits et légumes',  portion: 1},
       {name: 'Produits laitiers',  portion: 1},
       {name: 'Féculents et produits céréaliers',  portion: 1}
     ],
+    3: [
+      {name: 'Fruits et légumes',  portion: 99}
+    ],
     4: [
       {name: 'Produits laitiers',  portion: 1},
+      {name: 'Fruits et légumes',  portion: 1},
       {name: 'Féculents et produits céréaliers',  portion: 3}
     ]
   },

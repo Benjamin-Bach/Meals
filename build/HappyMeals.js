@@ -1,1 +1,66 @@
-"use strict";function _classCallCheck(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function _defineProperties(e,t){for(var a=0;a<t.length;a++){var n=t[a];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}function _createClass(e,t,a){return t&&_defineProperties(e.prototype,t),a&&_defineProperties(e,a),e}var HappyMeals=function(){function n(e,t){var a=2<arguments.length&&void 0!==arguments[2]?arguments[2]:[];_classCallCheck(this,n),this.days=7,this.nameDays=["monday","tuesday","wednesday","thursday","friday","saturday","sunday"],this.reco=e,this.pattern=t,this.uptake=a}return _createClass(n,[{key:"incrementTotals",value:function(e,t,a){for(var n=e[t].totals,r=this.uptake[t][a],s=0;s<r.length;s++){n[r[s].portion];n[r[s].name]=r[s].portion}return n}},{key:"addMealToweekMap",value:function(e,t){for(var a in e[t].uptake=this.uptake[t],this.uptake[t])e[t].proposals[a]=this.uptake[t][a],e[t].totals=this.incrementTotals(e,t,a);return e[t]}},{key:"weekMap",value:function(){for(var e={},t=0;t<7;t++){var a=this.nameDays[t];e[a]={totals:{},proposals:{},pattern:this.pattern},void 0!==this.uptake[a]&&(e[a]=this.addMealToweekMap(e,a))}return e}},{key:"debug",value:function(){}},{key:"provideMeals",get:function(){return"Yo4"}}]),n}();
+class HappyMeals {
+
+  constructor(reco, pattern, uptake = []) {
+    this.days = 7
+    this.nameDays = ['monday','tuesday','wednesday', 'thursday', 'friday', 'saturday', 'sunday' ]
+    this.reco = reco
+    this.pattern = pattern
+    this.uptake = uptake
+  }
+
+  get provideMeals() {
+    return 'Yo'
+  }
+
+  incrementTotals(weekMap,nameDay,mealKey){
+    let newTotal = weekMap[nameDay]['totals']
+    let meal = this.uptake[nameDay][mealKey]
+    console.log('---')
+    for (let i = 0; i < meal.length; i++) {
+      console.log(nameDay, mealKey, meal[i])
+      if(!newTotal[meal[i]['name']]){
+        console.log('c vide')
+        newTotal[meal[i]['name']] = meal[i]['portion']
+      }else{
+        console.log('ya un truc : ', newTotal[meal[i]['name']])
+        newTotal[meal[i]['name']] = meal[i]['portion'] + newTotal[meal[i]['name']]
+      }
+    }
+    return newTotal
+  }
+
+  addMealToweekMap(weekMap, nameDay){
+    weekMap[nameDay]['uptake'] = this.uptake[nameDay]
+    for (let mealKey in this.uptake[nameDay]) {
+      weekMap[nameDay]['proposals'][mealKey] = this.uptake[nameDay][mealKey]
+      weekMap[nameDay]['totals'] = this.incrementTotals(weekMap,nameDay,mealKey)
+    }
+    return weekMap[nameDay]
+  }
+
+  weekMap() {
+    let weekMap = {}
+    for (let i = 0; i < 7; i++) {
+      let nameDay = this.nameDays[i]
+      weekMap[nameDay] = {
+        totals: [],
+        proposals: {},
+        pattern: this.pattern
+      }
+      if(this.uptake[nameDay] !== undefined){
+        weekMap[nameDay] = this.addMealToweekMap(weekMap,nameDay)
+      }
+    }
+    return weekMap
+  }
+
+  debug() {
+    console.log('reco', this.reco)
+    console.log('pattern', this.pattern)
+    console.log('uptake', this.uptake)
+    console.log('weekMap()', this.weekMap())
+    console.log('provideMeals', this.provideMeals)
+    console.log(this.weekMap()['monday']['totals'])
+  }
+
+}

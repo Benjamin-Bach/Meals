@@ -33,9 +33,6 @@ gulp.task('js-prod', () => {
 
 gulp.task('js-dev', () => {
   return gulp.src('./src/*.js')
-  .pipe(plugins.babel({
-			presets: ['@babel/env']
-		}))
   .pipe(gulp.dest('./build/'));
 });
 

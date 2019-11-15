@@ -1,1 +1,3 @@
-"use strict";var testSemaine=new HappyMeals(recommendations,mealsPattern,weekUptake);testSemaine.debug();
+let testSemaine = new HappyMeals(recommendations, mealsPattern, weekUptake)
+
+testSemaine.debug()
