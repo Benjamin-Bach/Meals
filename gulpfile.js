@@ -2,12 +2,12 @@ const
   gulp  = require('gulp'),
   plugins = require('gulp-load-plugins')(),
   syncOpts = {
-    proxy: 'localhost',
+    proxy: 'localhost' + __dirname.replace('/home/ben/Docker/www',''),
     files       : [
       'build/*'
     ],
     watchEvents : ['add', 'change', 'unlink', 'addDir', 'unlinkDir'],
-    open        : false,
+    open        : true,
     notify      : false,
     ghostMode   : false,
     ui: {
