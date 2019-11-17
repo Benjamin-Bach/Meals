@@ -6,26 +6,38 @@ class HappyMeals {
     this.reco = reco
     this.pattern = pattern
     this.uptake = uptake
-    //this.weekMap = this.weekMap()
+    this.weekMap = this.weekMap()
   }
 
   get provideMeals() {
     return 'Yo'
   }
 
+  randomEntry(objectOrArray) {
+    if(objectOrArray.constructor.name === 'Array'){
+      let randomKey = Math.floor(Math.random() * (objectOrArray.length - 1))
+      return objectOrArray[randomKey]
+    }else if (objectOrArray.constructor.name === 'Object') {
+      let properties = Object.keys(objectOrArray)
+      let randomKey = Math.floor(Math.random() * (properties.length - 1))
+      let randomProperty = properties[randomKey]
+      return objectOrArray[randomProperty]
+    }
+  }
+
   incrementTotals(weekMap,nameDay,mealKey){
-    let newTotal = weekMap[nameDay]['totals']
+    let newTotal = weekMap[nameDay].totals
     let meal = this.uptake[nameDay][mealKey]
     for (let i = 0; i < meal.length; i++) {
-      let id = meal[i]['id']
-      let allReadyRegistered = newTotal.find(alim => alim.id == meal[i]['id'])
+      let id = meal[i].id
+      let allReadyRegistered = newTotal.find(alim => alim.id == meal[i].id)
       if(allReadyRegistered !== undefined){
-        let allReadyRegisteredIndex = newTotal.findIndex(alim => alim.id == meal[i]['id'])
+        let allReadyRegisteredIndex = newTotal.findIndex(alim => alim.id == meal[i].id)
         newTotal.splice(allReadyRegisteredIndex,1)
         newTotal.push({
           id: allReadyRegistered.id,
           name: allReadyRegistered.name,
-          portion: allReadyRegistered.portion + meal[i]['portion']
+          portion: allReadyRegistered.portion + meal[i].portion
         })
       }else{
         newTotal.push(meal[i])
@@ -35,10 +47,10 @@ class HappyMeals {
   }
 
   addMealToweekMap(weekMap, nameDay){
-    weekMap[nameDay]['uptake'] = this.uptake[nameDay]
+    weekMap[nameDay].uptake = this.uptake[nameDay]
     for (let mealKey in this.uptake[nameDay]) {
-      weekMap[nameDay]['proposals'][mealKey] = this.uptake[nameDay][mealKey]
-      weekMap[nameDay]['totals'] = this.incrementTotals(weekMap,nameDay,mealKey)
+      weekMap[nameDay].proposals[mealKey] = this.uptake[nameDay][mealKey]
+      weekMap[nameDay].totals = this.incrementTotals(weekMap,nameDay,mealKey)
     }
     return weekMap[nameDay]
   }
@@ -60,13 +72,11 @@ class HappyMeals {
   }
 
   debug() {
-
     console.log('reco', this.reco)
     console.log('pattern', this.pattern)
     console.log('uptake', this.uptake)
-    console.log('weekMap', this.weekMap())
+    console.log('weekMap', this.weekMap)
     console.log('provideMeals', this.provideMeals)
-
   }
 
 
