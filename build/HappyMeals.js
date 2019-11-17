@@ -6,6 +6,7 @@ class HappyMeals {
     this.reco = reco
     this.pattern = pattern
     this.uptake = uptake
+    this.weekMap = this.weekMap()
   }
 
   get provideMeals() {
@@ -15,14 +16,10 @@ class HappyMeals {
   incrementTotals(weekMap,nameDay,mealKey){
     let newTotal = weekMap[nameDay]['totals']
     let meal = this.uptake[nameDay][mealKey]
-    console.log('---')
     for (let i = 0; i < meal.length; i++) {
-      console.log(nameDay, mealKey, meal[i])
       if(!newTotal[meal[i]['name']]){
-        console.log('c vide')
         newTotal[meal[i]['name']] = meal[i]['portion']
       }else{
-        console.log('ya un truc : ', newTotal[meal[i]['name']])
         newTotal[meal[i]['name']] = meal[i]['portion'] + newTotal[meal[i]['name']]
       }
     }
@@ -55,12 +52,14 @@ class HappyMeals {
   }
 
   debug() {
+
     console.log('reco', this.reco)
     console.log('pattern', this.pattern)
     console.log('uptake', this.uptake)
-    console.log('weekMap()', this.weekMap())
+    console.log('weekMap', this.weekMap)
     console.log('provideMeals', this.provideMeals)
-    console.log(this.weekMap()['monday']['totals'])
+    
   }
+
 
 }
