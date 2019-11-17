@@ -6,7 +6,7 @@ class HappyMeals {
     this.reco = reco
     this.pattern = pattern
     this.uptake = uptake
-    this.weekMap = this.weekMap()
+    //this.weekMap = this.weekMap()
   }
 
   get provideMeals() {
@@ -17,10 +17,18 @@ class HappyMeals {
     let newTotal = weekMap[nameDay]['totals']
     let meal = this.uptake[nameDay][mealKey]
     for (let i = 0; i < meal.length; i++) {
-      if(!newTotal[meal[i]['name']]){
-        newTotal[meal[i]['name']] = meal[i]['portion']
+      let id = meal[i]['id']
+      let allReadyRegistered = newTotal.find(alim => alim.id == meal[i]['id'])
+      if(allReadyRegistered !== undefined){
+        let allReadyRegisteredIndex = newTotal.findIndex(alim => alim.id == meal[i]['id'])
+        newTotal.splice(allReadyRegisteredIndex,1)
+        newTotal.push({
+          id: allReadyRegistered.id,
+          name: allReadyRegistered.name,
+          portion: allReadyRegistered.portion + meal[i]['portion']
+        })
       }else{
-        newTotal[meal[i]['name']] = meal[i]['portion'] + newTotal[meal[i]['name']]
+        newTotal.push(meal[i])
       }
     }
     return newTotal
@@ -56,9 +64,9 @@ class HappyMeals {
     console.log('reco', this.reco)
     console.log('pattern', this.pattern)
     console.log('uptake', this.uptake)
-    console.log('weekMap', this.weekMap)
+    console.log('weekMap', this.weekMap())
     console.log('provideMeals', this.provideMeals)
-    
+
   }
 
 
