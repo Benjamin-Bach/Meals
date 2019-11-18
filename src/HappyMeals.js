@@ -1,6 +1,6 @@
 class HappyMeals {
 
-  /* Constructor : Déclaration de quelques variables utiles */
+  /* Constructor : Déclaration et création de quelques variables utiles */
 
   constructor(reco, pattern, uptake = []) {
     this.days = 7
@@ -8,7 +8,7 @@ class HappyMeals {
     this.reco = reco
     this.pattern = pattern
     this.uptake = uptake
-    this.totalsWeek = []
+    this.totalsWeek = this.totalsWeek()
     this.weekMap = this.weekMap()
   }
 
@@ -26,7 +26,10 @@ class HappyMeals {
         }
       }
     }
-    return 'Yo'
+    return {
+      weekMap: this.weekMap,
+      totalsWeek: this.totalsWeek
+    }
   }
 
   /* createMeal : créer un menu en vérifiant les reco */
@@ -52,8 +55,11 @@ class HappyMeals {
       }
       i++
     }
+    //  Pour finir on ajoute le menu crée au jour de la semaine
     this.weekMap[nameDay].proposals[mealIndex] = newMeal
   }
+
+  /* randomEntry : methode utilitaire sortant une entrée au hasard depuis un tableau ou un object */
 
   randomEntry(objectOrArray) {
     if(objectOrArray.constructor.name === 'Array'){
@@ -66,6 +72,8 @@ class HappyMeals {
       return objectOrArray[randomProperty]
     }
   }
+
+  /* IncrementsTotals : Incrémente le total des aliments par jour et par semaine au fur et à mesure de l'ajout / création de menu */
 
   incrementTotals(weekMap,nameDay,mealKey){
     let newTotal = weekMap[nameDay].totals
@@ -82,15 +90,15 @@ class HappyMeals {
           portions: allReadyRegistered.portions + meal[i].portions
         })
       }else{
-
         newTotal.push(meal[i])
       }
     }
     return newTotal
   }
 
-  weekMap() {
-    let weekMap = {}
+  /* totalsWeek : On crée un objet basé sur la liste des ingrédients, pret à enregistrer les totaux de la semaine */
+
+  totalsWeek(){
     let totalsWeek = []
     this.reco.map(function(key, index){
       totalsWeek.push({
@@ -99,7 +107,11 @@ class HappyMeals {
         portions: 0
       })
     })
-    this.totalsWeek = totalsWeek
+    return totalsWeek
+  }
+
+  weekMap() {
+    let weekMap = {}
     for (let i = 0; i < 7; i++) {
       let nameDay = this.nameDays[i]
       weekMap[nameDay] = {
@@ -108,7 +120,6 @@ class HappyMeals {
         pattern: this.pattern
       }
       if(this.uptake[nameDay] !== undefined){
-        //weekMap[nameDay] = this.addMealDayToweekMap(weekMap,nameDay)
         for (let mealKey in this.uptake[nameDay]) {
           weekMap[nameDay].proposals[mealKey] = this.uptake[nameDay][mealKey]
           weekMap[nameDay].totals = this.incrementTotals(weekMap,nameDay,mealKey)
@@ -122,8 +133,6 @@ class HappyMeals {
     console.log('reco', this.reco)
     console.log('pattern', this.pattern)
     console.log('uptake', this.uptake)
-    console.log('weekMap', this.weekMap)
-    console.log('totalsWeek', this.totalsWeek)
     console.log('provideMeals', this.provideMeals)
   }
 
