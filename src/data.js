@@ -98,7 +98,7 @@ let weekUptake = {
       {id: 5, name: 'Féculents et produits céréaliers',  portions: 1}
     ],
     2: [
-      {id: 1, name: 'Fruits et légumes',  portions: 99}
+      {id: 1, name: 'Fruits et légumes',  portions: 1}
     ],
     3: [
       {id: 9, name: 'Produits laitiers',  portions: 1},

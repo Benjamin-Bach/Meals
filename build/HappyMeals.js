@@ -10,6 +10,7 @@ class HappyMeals {
     this.uptake = uptake
     this.totalsWeek = this.totalsWeek()
     this.weekMap = this.weekMap()
+    this.incrementReccord = 0
   }
 
   /* provideMeals : Methode principale retournant toutes les proposition de menus de la semaine */
@@ -60,13 +61,14 @@ class HappyMeals {
     //  On ajoute le menu crée au jour de la semaine
     this.weekMap[nameDay].proposals[mealIndex] = newMeal
     // On incrémente les totaux
+    this.incrementTotals('create', nameDay, mealIndex, newMeal)
     // console.log(nameDay, 'newTotal', this.incrementTotals(this.weekMap,nameDay,mealIndex,true))
 
   }
 
   /* IncrementsTotals : Incrémente le total des aliments par jour et par semaine au fur et à mesure de l'ajout / création de menu */
 
-  incrementTotals(weekMap,nameDay,mealKey,fromProposals = false){
+  _incrementTotals(weekMap,nameDay,mealKey,fromProposals = false){
     let newTotal = weekMap[nameDay].totals
     // Définition du menu, depuis uptake s'il est déjà renseigné
     // ou depuis proposals s'il a été généré par le script
@@ -100,6 +102,27 @@ class HappyMeals {
     return newTotal
   }
 
+  incrementTotals(origin, nameDay, mealKey, meal){
+    console.log('----------------')
+    this.incrementReccord = 0
+    for (let i = 0; i < meal.length; i++) {
+      let alimKey = this.totalsWeek.findIndex(alim => alim.id == meal[i].id)
+      this.incrementReccord = this.incrementReccord + meal[i].portions
+      this.totalsWeek[alimKey].portions[nameDay] = this.incrementReccord
+      console.log(
+        nameDay,
+        mealKey,
+        meal[i].name,
+        meal[i].id,
+        'alimkey:' + alimKey,
+        meal[i].portions,
+        this.incrementReccord
+      )
+
+
+    }
+  }
+
 
   /* randomEntry : methode utilitaire sortant une entrée au hasard depuis un tableau ou un object */
 
@@ -116,19 +139,25 @@ class HappyMeals {
   }
 
 
-  /* totalsWeek : On crée un objet basé sur la liste des ingrédients, pret à enregistrer les totaux de la semaine */
+  /* totalsWeek : On crée un objet basé sur la liste des ingrédients, pret à enregistrer les totaux hebdo et quotidiens */
 
   totalsWeek(){
+    let totalsDay = {}
+    this.nameDays.map(function(key, index){
+      totalsDay[key] = 0
+    })
     let totalsWeek = []
     this.reco.map(function(key, index){
       totalsWeek.push({
         id: key.id,
         name: key.name,
-        portions: 0
+        portions: totalsDay
       })
     })
     return totalsWeek
   }
+
+  /* weekMap, créé une "carte" de la semaine et y place les menus déjà consomés */
 
   weekMap() {
     let weekMap = {}
@@ -142,7 +171,8 @@ class HappyMeals {
       if(this.uptake[nameDay] !== undefined){
         for (let mealKey in this.uptake[nameDay]) {
           weekMap[nameDay].proposals[mealKey] = this.uptake[nameDay][mealKey]
-          weekMap[nameDay].totals = this.incrementTotals(weekMap,nameDay,mealKey)
+          this.incrementTotals('uptake', nameDay, mealKey, this.uptake[nameDay][mealKey])
+          // weekMap[nameDay].totals = this.incrementTotals(weekMap,nameDay,mealKey)
         }
       }
     }
