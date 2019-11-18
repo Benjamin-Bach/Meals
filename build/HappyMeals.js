@@ -52,16 +52,7 @@ class HappyMeals {
       }
       i++
     }
-
-  }
-
-  addMealToweekMap(weekMap, nameDay){
-    weekMap[nameDay].uptake = this.uptake[nameDay]
-    for (let mealKey in this.uptake[nameDay]) {
-      weekMap[nameDay].proposals[mealKey] = this.uptake[nameDay][mealKey]
-      weekMap[nameDay].totals = this.incrementTotals(weekMap,nameDay,mealKey)
-    }
-    return weekMap[nameDay]
+    this.weekMap[nameDay].proposals[mealIndex] = newMeal
   }
 
   randomEntry(objectOrArray) {
@@ -117,7 +108,11 @@ class HappyMeals {
         pattern: this.pattern
       }
       if(this.uptake[nameDay] !== undefined){
-        weekMap[nameDay] = this.addMealToweekMap(weekMap,nameDay)
+        //weekMap[nameDay] = this.addMealDayToweekMap(weekMap,nameDay)
+        for (let mealKey in this.uptake[nameDay]) {
+          weekMap[nameDay].proposals[mealKey] = this.uptake[nameDay][mealKey]
+          weekMap[nameDay].totals = this.incrementTotals(weekMap,nameDay,mealKey)
+        }
       }
     }
     return weekMap
