@@ -23,6 +23,8 @@ class HappyMeals {
         if(this.weekMap[nameDay].proposals[i] === undefined){
           // Si le menu n'existe pas alors on le crée
           this.createMeal(nameDay, this.weekMap[nameDay].pattern[i], i)
+        }else{
+          // TODO : si le menu existe et qu'il est incomplet, on le complète
         }
       }
     }
@@ -55,29 +57,30 @@ class HappyMeals {
       }
       i++
     }
-    //  Pour finir on ajoute le menu crée au jour de la semaine
+    //  On ajoute le menu crée au jour de la semaine
     this.weekMap[nameDay].proposals[mealIndex] = newMeal
-  }
+    // On incrémente les totaux
+    // console.log(nameDay, 'newTotal', this.incrementTotals(this.weekMap,nameDay,mealIndex,true))
 
-  /* randomEntry : methode utilitaire sortant une entrée au hasard depuis un tableau ou un object */
-
-  randomEntry(objectOrArray) {
-    if(objectOrArray.constructor.name === 'Array'){
-      let randomKey = Math.floor(Math.random() * (objectOrArray.length - 1))
-      return objectOrArray[randomKey]
-    }else if (objectOrArray.constructor.name === 'Object') {
-      let properties = Object.keys(objectOrArray)
-      let randomKey = Math.floor(Math.random() * (properties.length - 1))
-      let randomProperty = properties[randomKey]
-      return objectOrArray[randomProperty]
-    }
   }
 
   /* IncrementsTotals : Incrémente le total des aliments par jour et par semaine au fur et à mesure de l'ajout / création de menu */
 
-  incrementTotals(weekMap,nameDay,mealKey){
+  incrementTotals(weekMap,nameDay,mealKey,fromProposals = false){
     let newTotal = weekMap[nameDay].totals
+    // Définition du menu, depuis uptake s'il est déjà renseigné
+    // ou depuis proposals s'il a été généré par le script
+    /*
+    let meal = []
+    if(!fromProposals){
+      meal = this.uptake[nameDay][mealKey]
+    }
+    meal = weekMap[nameDay].proposals[mealKey]
+    console.log(meal)
+    */
     let meal = this.uptake[nameDay][mealKey]
+
+
     for (let i = 0; i < meal.length; i++) {
       let id = meal[i].id
       let allReadyRegistered = newTotal.find(alim => alim.id == meal[i].id)
@@ -93,8 +96,25 @@ class HappyMeals {
         newTotal.push(meal[i])
       }
     }
+    //console.log(meal)
     return newTotal
   }
+
+
+  /* randomEntry : methode utilitaire sortant une entrée au hasard depuis un tableau ou un object */
+
+  randomEntry(objectOrArray) {
+    if(objectOrArray.constructor.name === 'Array'){
+      let randomKey = Math.floor(Math.random() * (objectOrArray.length - 1))
+      return objectOrArray[randomKey]
+    }else if (objectOrArray.constructor.name === 'Object') {
+      let properties = Object.keys(objectOrArray)
+      let randomKey = Math.floor(Math.random() * (properties.length - 1))
+      let randomProperty = properties[randomKey]
+      return objectOrArray[randomProperty]
+    }
+  }
+
 
   /* totalsWeek : On crée un objet basé sur la liste des ingrédients, pret à enregistrer les totaux de la semaine */
 
