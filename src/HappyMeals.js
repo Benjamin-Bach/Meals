@@ -1,5 +1,7 @@
 class HappyMeals {
 
+  /* Constructor : Déclaration de quelques variables utiles */
+
   constructor(reco, pattern, uptake = []) {
     this.days = 7
     this.nameDays = ['monday','tuesday','wednesday', 'thursday', 'friday', 'saturday', 'sunday' ]
@@ -10,8 +12,56 @@ class HappyMeals {
     this.weekMap = this.weekMap()
   }
 
+  /* provideMeals : Methode principale retournant toutes les proposition de menus de la semaine */
+
   get provideMeals() {
+    // on commence par boucler sur chaque jour de weekMap
+    for(let nameDay in this.weekMap){
+      // puis on boucle sur chaque menu
+      for (var i = 0; i < this.weekMap[nameDay].pattern.length; i++) {
+        // on verifie que le menu n'existe pas déjà
+        if(this.weekMap[nameDay].proposals[i] === undefined){
+          // Si le menu n'existe pas alors on le crée
+          this.createMeal(nameDay, this.weekMap[nameDay].pattern[i], i)
+        }
+      }
+    }
     return 'Yo'
+  }
+
+  /* createMeal : créer un menu en vérifiant les reco */
+
+  createMeal(nameDay, mealPattern, mealIndex){
+    // on va chercher un aliment au hasard jusqu'à ce que le nombre de portion par menu soit atteint
+    let portions = mealPattern.portions
+    let i = 0;
+    let newMeal = []
+    //console.log('newMeal', newMeal)
+    while (i < portions) {
+      let newAliment = this.randomEntry(this.reco)
+      // on vérifie qu'on a pas déjà ajouté l'aliment, autrement on cumule la quantité
+      let sameAlimKey = newMeal.findIndex(alim => alim.id == newAliment.id)
+      if(sameAlimKey >= 0){
+        newMeal[sameAlimKey].portions = newMeal[sameAlimKey].portions + 1
+      }else{
+        newMeal.push({
+          id: newAliment.id,
+          name: newAliment.name,
+          portions: 1
+        })
+      }
+      i++
+    }
+
+  }
+
+  addMealToweekMap(weekMap, nameDay){
+    weekMap[nameDay].uptake = this.uptake[nameDay]
+    for (let mealKey in this.uptake[nameDay]) {
+      weekMap[nameDay].proposals[mealKey] = this.uptake[nameDay][mealKey]
+      weekMap[nameDay].totals = this.incrementTotals(weekMap,nameDay,mealKey)
+    }
+    return weekMap[nameDay]
   }
 
   randomEntry(objectOrArray) {
@@ -38,23 +88,14 @@ class HappyMeals {
         newTotal.push({
           id: allReadyRegistered.id,
           name: allReadyRegistered.name,
-          portion: allReadyRegistered.portion + meal[i].portion
+          portions: allReadyRegistered.portions + meal[i].portions
         })
       }else{
-        
+
         newTotal.push(meal[i])
       }
     }
     return newTotal
-  }
-
-  addMealToweekMap(weekMap, nameDay){
-    weekMap[nameDay].uptake = this.uptake[nameDay]
-    for (let mealKey in this.uptake[nameDay]) {
-      weekMap[nameDay].proposals[mealKey] = this.uptake[nameDay][mealKey]
-      weekMap[nameDay].totals = this.incrementTotals(weekMap,nameDay,mealKey)
-    }
-    return weekMap[nameDay]
   }
 
   weekMap() {
@@ -64,11 +105,10 @@ class HappyMeals {
       totalsWeek.push({
         id: key.id,
         name: key.name,
-        portion: 0
+        portions: 0
       })
     })
     this.totalsWeek = totalsWeek
-    console.log(this.totalsWeek)
     for (let i = 0; i < 7; i++) {
       let nameDay = this.nameDays[i]
       weekMap[nameDay] = {
