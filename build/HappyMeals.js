@@ -45,24 +45,36 @@ class HappyMeals {
     while (i < portions) {
       let newAliment = this.randomEntry(this.reco)
       // on vérifie si on peut ajouter cet aliment
-      this.checkMax(newAliment, nameDay)
-      // on vérifie qu'on a pas déjà ajouté l'aliment, autrement on cumule la quantité
-      let sameAlimKey = newMeal.findIndex(alim => alim.id == newAliment.id)
-      if(sameAlimKey >= 0){
-        newMeal[sameAlimKey].portions = newMeal[sameAlimKey].portions + 1
-      }else{
-        newMeal.push({
-          id: newAliment.id,
-          name: newAliment.name,
-          portions: 1
-        })
+      this.checkCumul(newAliment, nameDay)
+      if(this.checkMax(newAliment, nameDay)){
+        // on vérifie qu'on a pas déjà ajouté l'aliment, autrement on cumule la quantité
+        let sameAlimKey = newMeal.findIndex(alim => alim.id == newAliment.id)
+        if(sameAlimKey >= 0){
+          newMeal[sameAlimKey].portions = newMeal[sameAlimKey].portions + 1
+        }else{
+          newMeal.push({
+            id: newAliment.id,
+            name: newAliment.name,
+            portions: 1
+          })
+        }
+        i++
       }
-      i++
     }
     //  On ajoute le menu crée au jour de la semaine
     this.weekMap[nameDay].proposals[mealIndex] = newMeal
     // On incrémente les totaux
     this.incrementTotals(nameDay, newMeal)
+  }
+
+  /* checkCumulative : Verifie si on peut cumuler ce produit avec d'autres utiliser dans la même journée */
+
+  checkCumul(newAliment, nameDay){
+    // si l'aliment est cumulable, on le vérifie pas
+    if(newAliment.cumulative){
+      // return true
+    }
+    console.log(newAliment, nameDay)
   }
 
   /* checkMax : Vérifie si le max d'un aliment a déjà été atteint */
