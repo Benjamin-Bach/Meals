@@ -8,9 +8,8 @@ class HappyMeals {
     this.reco = reco
     this.pattern = pattern
     this.uptake = uptake
-    this.totalsWeek = this.totalsWeek()
+    this.totalsWeek = {}
     this.weekMap = this.weekMap()
-    this.incrementReccord = 0
   }
 
   /* provideMeals : Methode principale retournant toutes les proposition de menus de la semaine */
@@ -61,68 +60,30 @@ class HappyMeals {
     //  On ajoute le menu crée au jour de la semaine
     this.weekMap[nameDay].proposals[mealIndex] = newMeal
     // On incrémente les totaux
-    this.incrementTotals('create', nameDay, mealIndex, newMeal)
-    // console.log(nameDay, 'newTotal', this.incrementTotals(this.weekMap,nameDay,mealIndex,true))
-
+    this.incrementTotals(nameDay, newMeal)
   }
 
   /* IncrementsTotals : Incrémente le total des aliments par jour et par semaine au fur et à mesure de l'ajout / création de menu */
 
-  _incrementTotals(weekMap,nameDay,mealKey,fromProposals = false){
-    let newTotal = weekMap[nameDay].totals
-    // Définition du menu, depuis uptake s'il est déjà renseigné
-    // ou depuis proposals s'il a été généré par le script
-    /*
-    let meal = []
-    if(!fromProposals){
-      meal = this.uptake[nameDay][mealKey]
-    }
-    meal = weekMap[nameDay].proposals[mealKey]
-    console.log(meal)
-    */
-    let meal = this.uptake[nameDay][mealKey]
-
-
+  incrementTotals(nameDay, meal){
+    // pour chaque menu...
     for (let i = 0; i < meal.length; i++) {
-      let id = meal[i].id
-      let allReadyRegistered = newTotal.find(alim => alim.id == meal[i].id)
-      if(allReadyRegistered !== undefined){
-        let allReadyRegisteredIndex = newTotal.findIndex(alim => alim.id == meal[i].id)
-        newTotal.splice(allReadyRegisteredIndex,1)
-        newTotal.push({
-          id: allReadyRegistered.id,
-          name: allReadyRegistered.name,
-          portions: allReadyRegistered.portions + meal[i].portions
-        })
-      }else{
-        newTotal.push(meal[i])
+      // on crée la structure de l'object totalsWeek de manière dynamique
+      if(this.totalsWeek[meal[i].id] === undefined){
+        this.totalsWeek[meal[i].id] = {}
       }
+      if(this.totalsWeek[meal[i].id][nameDay] === undefined){
+        this.totalsWeek[meal[i].id][nameDay] = 0
+      }
+      this.totalsWeek[meal[i].id][nameDay] = this.totalsWeek[meal[i].id][nameDay] + meal[i].portions
+      // on crée une entrée spécifique pour le total de la semaine
+      if(this.totalsWeek[meal[i].id]['week'] === undefined){
+        this.totalsWeek[meal[i].id]['week'] = 0
+      }
+      this.totalsWeek[meal[i].id]['week'] = this.totalsWeek[meal[i].id]['week'] + meal[i].portions
     }
-    //console.log(meal)
-    return newTotal
+
   }
-
-  incrementTotals(origin, nameDay, mealKey, meal){
-    console.log('----------------')
-    this.incrementReccord = 0
-    for (let i = 0; i < meal.length; i++) {
-      let alimKey = this.totalsWeek.findIndex(alim => alim.id == meal[i].id)
-      this.incrementReccord = this.incrementReccord + meal[i].portions
-      this.totalsWeek[alimKey].portions[nameDay] = this.incrementReccord
-      console.log(
-        nameDay,
-        mealKey,
-        meal[i].name,
-        meal[i].id,
-        'alimkey:' + alimKey,
-        meal[i].portions,
-        this.incrementReccord
-      )
-
-
-    }
-  }
-
 
   /* randomEntry : methode utilitaire sortant une entrée au hasard depuis un tableau ou un object */
 
@@ -138,25 +99,6 @@ class HappyMeals {
     }
   }
 
-
-  /* totalsWeek : On crée un objet basé sur la liste des ingrédients, pret à enregistrer les totaux hebdo et quotidiens */
-
-  totalsWeek(){
-    let totalsDay = {}
-    this.nameDays.map(function(key, index){
-      totalsDay[key] = 0
-    })
-    let totalsWeek = []
-    this.reco.map(function(key, index){
-      totalsWeek.push({
-        id: key.id,
-        name: key.name,
-        portions: totalsDay
-      })
-    })
-    return totalsWeek
-  }
-
   /* weekMap, créé une "carte" de la semaine et y place les menus déjà consomés */
 
   weekMap() {
@@ -164,15 +106,13 @@ class HappyMeals {
     for (let i = 0; i < 7; i++) {
       let nameDay = this.nameDays[i]
       weekMap[nameDay] = {
-        totals: [],
         proposals: {},
         pattern: this.pattern
       }
       if(this.uptake[nameDay] !== undefined){
         for (let mealKey in this.uptake[nameDay]) {
           weekMap[nameDay].proposals[mealKey] = this.uptake[nameDay][mealKey]
-          this.incrementTotals('uptake', nameDay, mealKey, this.uptake[nameDay][mealKey])
-          // weekMap[nameDay].totals = this.incrementTotals(weekMap,nameDay,mealKey)
+          this.incrementTotals(nameDay, this.uptake[nameDay][mealKey])
         }
       }
     }
