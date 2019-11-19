@@ -44,6 +44,8 @@ class HappyMeals {
     //console.log('newMeal', newMeal)
     while (i < portions) {
       let newAliment = this.randomEntry(this.reco)
+      // on vérifie si on peut ajouter cet aliment
+      this.checkMax(newAliment, nameDay)
       // on vérifie qu'on a pas déjà ajouté l'aliment, autrement on cumule la quantité
       let sameAlimKey = newMeal.findIndex(alim => alim.id == newAliment.id)
       if(sameAlimKey >= 0){
@@ -61,6 +63,36 @@ class HappyMeals {
     this.weekMap[nameDay].proposals[mealIndex] = newMeal
     // On incrémente les totaux
     this.incrementTotals(nameDay, newMeal)
+  }
+
+  /* checkMax : Vérifie si le max d'un aliment a déjà été atteint */
+
+  checkMax(newAliment, nameDay){
+    let max = this.reco.find(alim => alim.id == newAliment.id).max
+    // si l'aliment n'a pas de propriété max, alors il est ilimité
+    if(max === undefined){
+      return true
+    }
+    // on va chercher la quantité actuel déjà proposée selon la pérodicité
+    let period = this.reco.find(alim => alim.id == newAliment.id).period
+    let currentQty = undefined
+    if((period == 'day') && (this.totalsWeek[newAliment.id] !== undefined) && (this.totalsWeek[newAliment.id][nameDay] !== undefined)){
+      currentQty = this.totalsWeek[newAliment.id][nameDay]
+    }
+    if((period == 'week') && (this.totalsWeek[newAliment.id] !== undefined) && (this.totalsWeek[newAliment.id]['week'] !== undefined)){
+      currentQty = this.totalsWeek[newAliment.id]['week']
+    }
+    if( currentQty === undefined ){
+      currentQty = 0
+    }
+    // si le max n'est pas encore atteint, on valide
+    if(currentQty < max){
+      return true
+    }else{
+      return false
+    }
+    // TODO : Check si l'aliment est déjà dans le menu en cours et si son max l'y autorise
+    // la comparaison se fait actuellement sur totalsWeek, incrémenté menu par menu et non aliment par aliment
   }
 
   /* IncrementsTotals : Incrémente le total des aliments par jour et par semaine au fur et à mesure de l'ajout / création de menu */
@@ -89,11 +121,11 @@ class HappyMeals {
 
   randomEntry(objectOrArray) {
     if(objectOrArray.constructor.name === 'Array'){
-      let randomKey = Math.floor(Math.random() * (objectOrArray.length - 1))
+      let randomKey = Math.floor(Math.random() * objectOrArray.length)
       return objectOrArray[randomKey]
     }else if (objectOrArray.constructor.name === 'Object') {
       let properties = Object.keys(objectOrArray)
-      let randomKey = Math.floor(Math.random() * (properties.length - 1))
+      let randomKey = Math.floor(Math.random() * properties.length)
       let randomProperty = properties[randomKey]
       return objectOrArray[randomProperty]
     }
@@ -123,7 +155,10 @@ class HappyMeals {
     console.log('reco', this.reco)
     console.log('pattern', this.pattern)
     console.log('uptake', this.uptake)
-    console.log('provideMeals', this.provideMeals)
+    console.log('totalsWeek', this.provideMeals.totalsWeek)
+    for (var day in this.provideMeals.weekMap) {
+      console.log(day, this.provideMeals.weekMap[day].proposals)
+    }
   }
 
 
