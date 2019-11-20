@@ -18,11 +18,11 @@ class HappyMeals {
     // on commence par boucler sur chaque jour de weekMap
     for(let nameDay in this.weekMap){
       // puis on boucle sur chaque menu
-      for (var i = 0; i < this.weekMap[nameDay].pattern.length; i++) {
+      for (var i = 0; i < this.pattern.length; i++) {
         // on verifie que le menu n'existe pas déjà
-        if(this.weekMap[nameDay].proposals[i] === undefined){
+        if(this.weekMap[nameDay][i] === undefined){
           // Si le menu n'existe pas alors on le crée
-          this.createMeal(nameDay, this.weekMap[nameDay].pattern[i], i)
+          this.createMeal(nameDay, this.pattern[i], i)
         }else{
           // TODO : si le menu existe et qu'il est incomplet, on le complète
         }
@@ -62,7 +62,7 @@ class HappyMeals {
       }
     }
     //  On ajoute le menu crée au jour de la semaine
-    this.weekMap[nameDay].proposals[mealIndex] = newMeal
+    this.weekMap[nameDay][mealIndex] = newMeal
     // On incrémente les totaux
     this.incrementTotals(nameDay, newMeal)
   }
@@ -176,13 +176,10 @@ class HappyMeals {
     let weekMap = {}
     for (let i = 0; i < 7; i++) {
       let nameDay = this.nameDays[i]
-      weekMap[nameDay] = {
-        proposals: {},
-        pattern: this.pattern
-      }
+      weekMap[nameDay] = {}
       if(this.uptake[nameDay] !== undefined){
         for (let mealKey in this.uptake[nameDay]) {
-          weekMap[nameDay].proposals[mealKey] = this.uptake[nameDay][mealKey]
+          weekMap[nameDay][mealKey] = this.uptake[nameDay][mealKey]
           this.incrementTotals(nameDay, this.uptake[nameDay][mealKey])
         }
       }
@@ -196,7 +193,7 @@ class HappyMeals {
     console.log('uptake', this.uptake)
     console.log('totalsWeek', this.provideMeals.totalsWeek)
     for (var day in this.provideMeals.weekMap) {
-      console.log(day, this.provideMeals.weekMap[day].proposals)
+      console.log(day, this.provideMeals.weekMap[day])
     }
   }
 
