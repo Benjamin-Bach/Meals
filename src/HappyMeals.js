@@ -45,8 +45,8 @@ class HappyMeals {
     while (i < portions) {
       let newAliment = this.randomEntry(this.reco)
       // on vérifie si on peut ajouter cet aliment
-      this.checkCumul(newAliment, nameDay)
-      if(this.checkMax(newAliment, nameDay)){
+
+      if(this.checkMax(newAliment, nameDay, newMeal) && this.checkCumul(newAliment, nameDay, newMeal)){
         // on vérifie qu'on a pas déjà ajouté l'aliment, autrement on cumule la quantité
         let sameAlimKey = newMeal.findIndex(alim => alim.id == newAliment.id)
         if(sameAlimKey >= 0){
@@ -72,20 +72,47 @@ class HappyMeals {
   checkCumul(newAliment, nameDay){
     // si l'aliment est cumulable, on le vérifie pas
     if(newAliment.cumulative){
-      // return true
+      return true
+    }else{
+      console.log('aliment refusé', newAliment.id, newAliment.cumulative)
+
+      //console.log(newAliment, nameDay)
+      // on controle si un autre aliment non cumulable est déjà présent dans cette journée
+      let allReadyConsumed = 0
+      if(this.totalsWeek[newAliment.id] !== undefined){
+        if(this.totalsWeek[newAliment.id][nameDay] !== undefined){
+          allReadyConsumed = this.totalsWeek[newAliment.id][nameDay]
+        }
+      }
+      if(allReadyConsumed){
+        console.log('aliment refusé')
+        return false
+        // on fait la même chose sur le menu en cours de composition
+
+      }else{
+        console.log('aliment accepté', this.totalsWeek[newAliment.id])
+        return true
+      }
     }
-    console.log(newAliment, nameDay)
   }
 
   /* checkMax : Vérifie si le max d'un aliment a déjà été atteint */
 
-  checkMax(newAliment, nameDay){
+  checkMax(newAliment, nameDay, currentMeal){
     let max = this.reco.find(alim => alim.id == newAliment.id).max
     // si l'aliment n'a pas de propriété max, alors il est ilimité
     if(max === undefined){
       return true
     }
-    // on va chercher la quantité actuel déjà proposée selon la pérodicité
+    // On vérifie si l'ingrédient ne se trouve pas déjà dans le menu en cours de composition
+    if(currentMeal.find(alim => alim.id == newAliment.id) !== undefined){
+      max = max - currentMeal.find(alim => alim.id == newAliment.id).portions
+      // S'il est déjà dans le panier et que le max est atteint, on ne va pas plus loin
+      if(!max){
+        return false
+      }
+    }
+    // on va chercher la quantité actuel déjà proposée selon la périodicité
     let period = this.reco.find(alim => alim.id == newAliment.id).period
     let currentQty = undefined
     if((period == 'day') && (this.totalsWeek[newAliment.id] !== undefined) && (this.totalsWeek[newAliment.id][nameDay] !== undefined)){
