@@ -33,6 +33,7 @@ class HappyMeals {
       totalsWeek: this.totalsWeek
     }
   }
+  
 
   /* createMeal : créer un menu en vérifiant les reco */
 
