@@ -46,7 +46,7 @@ class HappyMeals {
       let newAliment = this.randomEntry(this.reco)
       // on vérifie si on peut ajouter cet aliment
 
-      if(this.checkMax(newAliment, nameDay, newMeal) && this.checkCumul(newAliment, nameDay, newMeal)){
+      if(this.checkMax(newAliment, nameDay, newMeal) /* && this.checkCumul(newAliment, nameDay, newMeal) */){
         // on vérifie qu'on a pas déjà ajouté l'aliment, autrement on cumule la quantité
         let sameAlimKey = newMeal.findIndex(alim => alim.id == newAliment.id)
         if(sameAlimKey >= 0){
@@ -74,7 +74,7 @@ class HappyMeals {
     if(newAliment.cumulative){
       return true
     }else{
-      console.log('aliment refusé', newAliment.id, newAliment.cumulative)
+      console.log(newAliment.name)
 
       //console.log(newAliment, nameDay)
       // on controle si un autre aliment non cumulable est déjà présent dans cette journée
@@ -84,13 +84,13 @@ class HappyMeals {
           allReadyConsumed = this.totalsWeek[newAliment.id][nameDay]
         }
       }
-      if(allReadyConsumed){
+      if(allReadyConsumed >= 1){
         console.log('aliment refusé')
         return false
         // on fait la même chose sur le menu en cours de composition
 
       }else{
-        console.log('aliment accepté', this.totalsWeek[newAliment.id])
+        console.log(nameDay, 'aliment accepté',allReadyConsumed, this.totalsWeek[newAliment.id])
         return true
       }
     }
