@@ -33,7 +33,7 @@ class HappyMeals {
       totalsWeek: this.totalsWeek
     }
   }
-  
+
 
   /* createMeal : créer un menu en vérifiant les reco */
 
@@ -172,6 +172,7 @@ class HappyMeals {
   }
 
   /* weekMap, créé une "carte" de la semaine et y place les menus déjà consomés */
+
 
   weekMap() {
     let weekMap = {}

@@ -4,7 +4,7 @@ const
   syncOpts = {
     proxy: 'localhost' + __dirname.replace('/home/ben/Docker/www',''),
     files       : [
-      'build/*'
+      'src/*'
     ],
     watchEvents : ['add', 'change', 'unlink', 'addDir', 'unlinkDir'],
     open        : true,
@@ -19,7 +19,7 @@ console.log(plugins);
 var browsersync = false;
 
 gulp.task('js-prod', () => {
-  return gulp.src('./src/*.js')
+  return gulp.src('./src/HappyMeals.js')
   .pipe(plugins.babel({
 			presets: ['@babel/env']
 		}))
