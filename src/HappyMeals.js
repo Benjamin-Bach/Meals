@@ -9,6 +9,7 @@ class HappyMeals {
     this.pattern = pattern
     this.uptake = uptake
     this.totalsWeek = {}
+    this.cumulativeState = {}
     this.weekMap = this.weekMap()
   }
 
@@ -29,6 +30,7 @@ class HappyMeals {
       }
     }
     return {
+      cumulativeState: this.cumulativeState,
       weekMap: this.weekMap,
       totalsWeek: this.totalsWeek
     }
@@ -47,7 +49,7 @@ class HappyMeals {
       let newAliment = this.randomEntry(this.reco)
       // on vérifie si on peut ajouter cet aliment
 
-      if(this.checkMax(newAliment, nameDay, newMeal) /* && this.checkCumul(newAliment, nameDay, newMeal) */){
+      if(this.checkMax(newAliment, nameDay, newMeal) && this.checkCumul(newAliment, nameDay, newMeal) ){
         // on vérifie qu'on a pas déjà ajouté l'aliment, autrement on cumule la quantité
         let sameAlimKey = newMeal.findIndex(alim => alim.id == newAliment.id)
         if(sameAlimKey >= 0){
@@ -56,7 +58,8 @@ class HappyMeals {
           newMeal.push({
             id: newAliment.id,
             name: newAliment.name,
-            portions: 1
+            portions: 1,
+            cumulative: newAliment.cumulative
           })
         }
         i++
@@ -70,29 +73,22 @@ class HappyMeals {
 
   /* checkCumulative : Verifie si on peut cumuler ce produit avec d'autres utiliser dans la même journée */
 
-  checkCumul(newAliment, nameDay){
+  checkCumul(newAliment, nameDay, newMeal){
     // si l'aliment est cumulable, on le vérifie pas
     if(newAliment.cumulative){
       return true
     }else{
-      console.log(newAliment.name)
-
-      //console.log(newAliment, nameDay)
       // on controle si un autre aliment non cumulable est déjà présent dans cette journée
-      let allReadyConsumed = 0
-      if(this.totalsWeek[newAliment.id] !== undefined){
-        if(this.totalsWeek[newAliment.id][nameDay] !== undefined){
-          allReadyConsumed = this.totalsWeek[newAliment.id][nameDay]
-        }
-      }
-      if(allReadyConsumed >= 1){
-        console.log('aliment refusé')
+      if(this.cumulativeState[nameDay]){
         return false
-        // on fait la même chose sur le menu en cours de composition
-
       }else{
-        console.log(nameDay, 'aliment accepté',allReadyConsumed, this.totalsWeek[newAliment.id])
-        return true
+        // on vérifie s'il n'y a pas déjà un non cumulable dans le menu en cours de création
+        let allreadyNotCumulative = newMeal.find(alim => alim.cumulative == newAliment.cumulative)
+        if(allreadyNotCumulative !== undefined){
+          return false
+        }else{
+          return true
+        }
       }
     }
   }
@@ -153,6 +149,11 @@ class HappyMeals {
         this.totalsWeek[meal[i].id]['week'] = 0
       }
       this.totalsWeek[meal[i].id]['week'] = this.totalsWeek[meal[i].id]['week'] + meal[i].portions
+      // on enregistre les ingrédients non cumulables dans cumulativeState
+      if((this.cumulativeState[nameDay] === undefined) && !this.reco.find(alim => alim.id == meal[i].id).cumulative){
+        // console.warn(meal[i].name, this.reco.find(alim => alim.id == meal[i].id).cumulative)
+        this.cumulativeState[nameDay] = meal[i].name
+      }
     }
 
   }
