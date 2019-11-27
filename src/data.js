@@ -69,7 +69,7 @@ let recommendations = [
   },
   {
     id: 8,
-    name: 'œuf',
+    name: 'Œuf',
     max: 1,
     period: 'day',
     cumulative: false
@@ -98,7 +98,8 @@ let weekUptake = {
       {id: 5, name: 'Féculents et produits céréaliers',  portions: 1}
     ],
     2: [
-      {id: 1, name: 'Fruits et légumes',  portions: 99}
+      {id: 9, name: 'Produits laitiers',  portions: 1},
+      {id: 1, name: 'Fruits et légumes',  portions: 1}
     ],
     3: [
       {id: 9, name: 'Produits laitiers',  portions: 1},
@@ -106,9 +107,73 @@ let weekUptake = {
       {id: 5, name: 'Féculents et produits céréaliers',  portions: 3}
     ]
   },
+  tuesday: {
+    0: [
+      {id: 1, name: 'Fruits et légumes',  portions: 1},
+      {id: 9, name: 'Produits laitiers',  portions: 1},
+      {id: 5, name: 'Féculents et produits céréaliers',  portions: 1}
+    ],
+    2: [
+      {id: 9, name: 'Produits laitiers',  portions: 1},
+      {id: 1, name: 'Fruits et légumes',  portions: 1}
+    ]
+  },
+  wednesday: {
+    0: [
+      {id: 1, name: 'Fruits et légumes',  portions: 1},
+      {id: 9, name: 'Produits laitiers',  portions: 1},
+      {id: 5, name: 'Féculents et produits céréaliers',  portions: 1}
+    ],
+    2: [
+      {id: 9, name: 'Produits laitiers',  portions: 1},
+      {id: 1, name: 'Fruits et légumes',  portions: 1}
+    ]
+  },
+  thursday: {
+    0: [
+      {id: 1, name: 'Fruits et légumes',  portions: 1},
+      {id: 9, name: 'Produits laitiers',  portions: 1},
+      {id: 5, name: 'Féculents et produits céréaliers',  portions: 1}
+    ],
+    2: [
+      {id: 9, name: 'Produits laitiers',  portions: 1},
+      {id: 1, name: 'Fruits et légumes',  portions: 1}
+    ]
+  },
+  friday: {
+    0: [
+      {id: 1, name: 'Fruits et légumes',  portions: 1},
+      {id: 9, name: 'Produits laitiers',  portions: 1},
+      {id: 5, name: 'Féculents et produits céréaliers',  portions: 1}
+    ],
+    2: [
+      {id: 9, name: 'Produits laitiers',  portions: 1},
+      {id: 1, name: 'Fruits et légumes',  portions: 1}
+    ]
+  },
   saturday: {
+    0: [
+      {id: 1, name: 'Fruits et légumes',  portions: 1},
+      {id: 9, name: 'Produits laitiers',  portions: 1},
+      {id: 5, name: 'Féculents et produits céréaliers',  portions: 1}
+    ],
     1: [
-      { id: 2, name: 'Viande rouge',  portions: 3000}
+      { id: 2, name: 'Viande rouge',  portions: 1}
+    ],
+    2: [
+      {id: 9, name: 'Produits laitiers',  portions: 1},
+      {id: 1, name: 'Fruits et légumes',  portions: 1}
+    ]
+  },
+  sunday: {
+    0: [
+      {id: 1, name: 'Fruits et légumes',  portions: 1},
+      {id: 9, name: 'Produits laitiers',  portions: 1},
+      {id: 5, name: 'Féculents et produits céréaliers',  portions: 1}
+    ],
+    2: [
+      {id: 9, name: 'Produits laitiers',  portions: 1},
+      {id: 1, name: 'Fruits et légumes',  portions: 1}
     ]
   }
 }
