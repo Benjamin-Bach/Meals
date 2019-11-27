@@ -15,7 +15,7 @@ class HappyMeals {
 
   /* provideMeals : Methode principale retournant toutes les proposition de menus de la semaine */
 
-  get provideMeals() {
+  provideMeals() {
     // on commence par boucler sur chaque jour de weekMap
     for(let nameDay in this.weekMap){
       // puis on boucle sur chaque menu
@@ -28,11 +28,6 @@ class HappyMeals {
           // TODO : si le menu existe et qu'il est incomplet, on le complète
         }
       }
-    }
-    return {
-      cumulativeState: this.cumulativeState,
-      weekMap: this.weekMap,
-      totalsWeek: this.totalsWeek
     }
   }
 
@@ -191,12 +186,14 @@ class HappyMeals {
   }
 
   debug() {
-    console.log('reco', this.reco)
-    console.log('pattern', this.pattern)
-    console.log('uptake', this.uptake)
-    console.log('totalsWeek', this.provideMeals.totalsWeek)
-    for (var day in this.provideMeals.weekMap) {
-      console.log(day, this.provideMeals.weekMap[day])
+    console.log('---------- DEBUG ----------')
+    console.log('Recommendations (reco) : ', this.reco)
+    console.log('Portions par repas (pattern) : ', this.pattern)
+    console.log('Déjà mangé cette semaine (uptake) : ', this.uptake)
+    console.log('Totaux par jour et semaine (totalsWeek) : ', this.totalsWeek)
+    console.log('Propositions, jour par jour (weekMap) : ')
+    for (var day in this.weekMap) {
+      console.log(day, this.weekMap[day])
     }
   }
 
